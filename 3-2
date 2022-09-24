@@ -1,0 +1,82 @@
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#pragma warning(disable:4996) 
+
+int n = 0;  //삽입된 배열 개수
+int h[100]; //힙 배열
+
+
+void upHeap(int i) { //힙 내 위치 i에 저장된 키를 맞는 위치로 상향 이동
+	int tmp;
+	if (i == 1) {  //위치가 루트면 리턴
+		return;
+	}
+	if (h[i] <= h[i / 2]) { //위치노드가 부모노드보다 같거나 작으면 리턴 (완전 이진트리에서는 부모 노드 위치가 i/2)
+		return;
+	}
+	tmp = h[i];
+	h[i] = h[i / 2];
+	h[i / 2] = tmp;  //위의 두 경우가 아니면 부모노드와 위치노드의 값을 스왑
+	upHeap(i / 2);
+
+}
+
+void downHeap(int i) { //힙 내 위치 i에 저장된 키를 맞는 위치로 하향 이동
+	int tmp;
+	int bigger;
+	if ((n < (i * 2)) && (n < (i * 2 + 1))) { //왼쪽과 오른쪽 자식이 모두 외부노드이면 리턴
+		return;
+	}
+	bigger = i * 2;
+	if (n >= i * 2 + 1) {
+		if (h[i * 2 + 1] > h[bigger]) {
+			bigger = i * 2 + 1;
+		}
+	}
+	if (h[i] >= h[bigger]) {  //위치노드가 자식노드보다 크거나 같으면 리턴
+		return;
+	}
+	tmp = h[i];  //위의 경우가 아니면 위치노드와 자식노드를 스왑
+	h[i] = h[bigger];
+	h[bigger] = tmp;
+
+	downHeap(bigger); //재귀함수 호출
+}
+
+void rBuildHeap(int i) {
+	if (i > n)
+		return;
+	rBuildHeap(2 * i);
+	rBuildHeap(2 * i + 1);
+	downHeap(i);
+}
+
+void printHeap() {  //힙 레벨 순서로 프린트
+
+	for (int i = 1;i <= n;i++) {
+		printf(" %d", h[i]);
+	}
+
+	printf("\n");
+}
+
+
+void main() {
+
+
+	int keynum; //입력받을 키 개수
+	int e;  //키 값
+	
+	scanf("%d", &keynum);
+
+	for (int i = 1;i <= keynum;i++) {
+		scanf("%d", &e);
+		h[i] = e;
+		n++;
+	}
+
+	rBuildHeap(1);
+
+	printHeap();
+}
