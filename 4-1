@@ -1,0 +1,105 @@
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#pragma warning(disable:4996) 
+
+int n; 
+int h[100]; //힙 배열
+int n2;
+
+
+void upHeap(int i) { //힙 내 위치 i에 저장된 키를 맞는 위치로 상향 이동
+	int tmp;
+	if (i == 1) { 
+		return;
+	}
+	if (h[i] <= h[i / 2]) { 
+		return;
+	}
+	tmp = h[i];
+	h[i] = h[i / 2];
+	h[i / 2] = tmp;  
+	upHeap(i / 2);
+
+}
+
+void downHeap(int i) { //힙 내 위치 i에 저장된 키를 맞는 위치로 하향 이동
+	int tmp;
+	int bigger;
+	if ((n < (i * 2)) && (n < (i * 2 + 1))) { 
+		return;
+	}
+	bigger = i * 2;
+	if (n >= i * 2 + 1) {
+		if (h[i * 2 + 1] > h[bigger]) {
+			bigger = i * 2 + 1;
+		}
+	}
+	if (h[i] >= h[bigger]) { 
+		return;
+	}
+	tmp = h[i];  
+	h[i] = h[bigger];
+	h[bigger] = tmp;
+
+	downHeap(bigger); //재귀함수 호출
+}
+
+
+void insertItem(int key) {
+	h[++n] = key;  //개수 높이고 삽입
+	upHeap(n);  //맞는 위치로 상향 이동
+}
+
+int removeMax() {
+	int key;
+	key = h[1]; //루트 키 보관
+	h[1] = h[n--];  //제일 마지막 키 값을 루트에 넣음
+	downHeap(1);  //루트에 있는 값을 맞는 위치로 하향 이동
+	return key;  //삭제된 키 값 반환
+}
+
+void printHeap() {  //힙 레벨 순서로 프린트
+
+	for (int i = 1;i <= n2;i++) {
+		printf(" %d", h[i]);
+	}
+
+	printf("\n");
+}
+
+void rBuildHeap(int i) {
+	if (i > n)
+		return;
+	rBuildHeap(2 * i);
+	rBuildHeap(2 * i + 1);
+	downHeap(i);
+}
+
+
+void inPlaceHeapSort() {
+	int tmp;
+	n2 = n;
+
+	for (int i = n;i >= 2;i--) {
+		tmp = h[1];
+		h[1] = h[i];
+		h[i] = tmp;
+		n--;
+		downHeap(1);
+	}
+}
+void main() {
+
+	scanf("%d", &n); //입력받을 키 개수
+
+	for (int i = 1;i <= n;i++) {
+		scanf("%d", &h[i]);
+	}
+
+	rBuildHeap(1);
+	inPlaceHeapSort();
+	printHeap();
+
+
+}
