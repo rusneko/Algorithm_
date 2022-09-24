@@ -1,0 +1,38 @@
+#pragma warning(disable:4996)
+#include<stdio.h>
+#include<string.h>
+#include <stdlib.h>
+
+//삽입 정렬
+
+int main() {
+	int *number; //번호를 저장할 배열
+	int n; //입력받을 개수
+	int max; //최대값 저장할 변수
+	int i, j;
+
+	scanf("%d", &n);
+
+	number = (int *)malloc(n * sizeof(int));
+	
+	for (int i = 0;i < n;i++) {
+		scanf("%d", &number[i]);
+	}
+	
+
+	for (int i = 1;i < n;i++) {
+		int tmp = number[i];
+		j = i - 1;
+		while (number[j] > tmp) {
+			number[j + 1] = number[j];
+			j = j - 1;
+		}
+		number[j + 1] = tmp;
+	}
+
+	for (int i = 0;i < n;i++) {
+		printf(" %d", number[i]);
+	}
+
+	free(number);
+}
